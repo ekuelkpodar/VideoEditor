@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Local Motion Lab</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <div>
+            <p class="eyebrow">Private browser studio</p>
+            <h1>Local Motion Lab</h1>
+          </div>
+        </div>
+        <nav class="tool-nav" aria-label="Editing tools">
+          <button class="active" data-tool="import">Import</button>
+          <button data-tool="maker">Animation Maker</button>
+          <button data-tool="transform">Transform</button>
+          <button data-tool="effects">Effects</button>
+          <button data-tool="text">Text Overlay</button>
+          <button data-tool="frames">Frames & Sprite</button>
+          <button data-tool="video">Video Tools</button>
+          <button data-tool="optimize">Optimize</button>
+        </nav>
+        <section class="side-card">
+          <h2>Privacy Model</h2>
+          <p>Files stay in this browser tab. Canvas tools run locally; heavy GIF/video codecs are exposed through optional WASM adapters.</p>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Ezgif-style workflows, local-first</p>
+            <h2>Import frames, edit them, preview motion, export browser-native assets.</h2>
+          </div>
+          <div class="status-pill" id="runtimeStatus">Canvas ready</div>
+        </section>
+
+        <section class="dropzone" id="dropzone">
+          <input id="fileInput" type="file" multiple accept="image/*,video/*,.gif,.webp,.avif,.apng,.png,.jpg,.jpeg,.bmp,.svg">
+          <div>
+            <strong>Drop images or videos here</strong>
+            <span>Static images become frames. Videos can be sampled into frame arrays. Animated decoding is delegated to WASM adapters when installed.</span>
+          </div>
+          <button class="primary" id="browseButton">Choose files</button>
+        </section>
+
+        <div class="grid">
+          <section class="panel preview-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Preview</p>
+                <h3 id="projectTitle">No media loaded</h3>
+              </div>
+              <div class="preview-actions">
+                <button id="playButton" disabled>Play</button>
+                <button id="stopButton" disabled>Stop</button>
+              </div>
+            </div>
+            <canvas id="previewCanvas" width="960" height="540"></canvas>
+            <div class="timeline">
+              <input id="frameSlider" type="range" min="0" max="0" value="0" disabled>
+              <span id="frameReadout">0 / 0</span>
+            </div>
+          </section>
+
+          <section class="panel tool-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Tool</p>
+                <h3 id="toolTitle">Import</h3>
+              </div>
+            </div>
+
+            <div class="tool-view active" data-view="import">
+              <p class="tool-copy">Load multiple images to create an animation, or load a video and sample frames for editing. Browser-native decoding is used first.</p>
+              <div class="form-grid">
+                <label>Video sample FPS <input id="videoFps" type="number" min="1" max="30" value="8"></label>
+                <label>Max video seconds <input id="videoSeconds" type="number" min="1" max="30" value="6"></label>
+              </div>
+              <button id="sampleVideoButton" disabled>Sample Selected Video</button>
+            </div>
+
+            <div class="tool-view" data-view="maker">
+              <p class="tool-copy">Use loaded images as animation frames. Reorder, set frame timing, preview, then export as WebM or a sprite sheet. GIF output is enabled when a GIF encoder adapter is installed.</p>
+              <div class="form-grid">
+                <label>Frame delay (ms) <input id="delayInput" type="number" min="20" max="5000" value="120"></label>
+                <label>Loop count <input id="loopInput" type="number" min="0" max="100" value="0"></label>
+              </div>
+              <div class="button-row">
+                <button id="applyDelayButton">Apply Delay</button>
+                <button id="reverseButton">Reverse</button>
+                <button id="pingPongButton">Ping-pong</button>
+                <button id="shuffleButton">Shuffle</button>
+              </div>
+              <div class="form-grid">
+                <label>Static animation
+                  <select id="staticMode">
+                    <option value="zoom">Zoom</option>
+                    <option value="scroll">Scroll</option>
+                    <option value="rotate">Rotate</option>
+                  </select>
+                </label>
+                <label>Generated frames <input id="staticFrameCount" type="number" min="2" max="120" value="24"></label>
+              </div>
+              <div class="button-row">
+                <button id="staticAnimationButton">Animate Current Still</button>
+                <button id="exportWebmButton">Export WebM</button>
+                <button id="exportGifButton">Export GIF</button>
+              </div>
+            </div>
+
+            <div class="tool-view" data-view="transform">
+              <div class="form-grid">
+                <label>Width <input id="resizeWidth" type="number" min="1"></label>
+                <label>Height <input id="resizeHeight" type="number" min="1"></label>
+                <label>Crop X <input id="cropX" type="number" min="0" value="0"></label>
+                <label>Crop Y <input id="cropY" type="number" min="0" value="0"></label>
+                <label>Crop W <input id="cropW" type="number" min="1"></label>
+                <label>Crop H <input id="cropH" type="number" min="1"></label>
+              </div>
+              <div class="button-row">
+                <button id="resizeButton">Resize</button>
+                <button id="cropButton">Crop</button>
+                <button data-rotate="90">Rotate 90</button>
+                <button data-rotate="-90">Rotate -90</button>
+                <button data-flip="x">Flip X</button>
+                <button data-flip="y">Flip Y</button>
+              </div>
+              <div class="form-grid">
+                <label>Trim start frame <input id="trimStart" type="number" min="0" value="0"></label>
+                <label>Trim end frame <input id="trimEnd" type="number" min="0" value="0"></label>
+              </div>
+              <button id="trimButton">Trim Frames</button>
+            </div>
+
+            <div class="tool-view" data-view="effects">
+              <div class="button-row">
+                <button data-effect="grayscale">Grayscale</button>
+                <button data-effect="sepia">Sepia</button>
+                <button data-effect="invert">Invert</button>
+                <button data-effect="halftone">Halftone</button>
+              </div>
+              <div class="form-grid">
+                <label>Brightness <input id="brightnessInput" type="range" min="-100" max="100" value="0"></label>
+                <label>Contrast <input id="contrastInput" type="range" min="-100" max="100" value="0"></label>
+                <label>Pixelate size <input id="pixelSize" type="number" min="2" max="80" value="12"></label>
+                <label>Background fuzz <input id="fuzzInput" type="range" min="0" max="180" value="38"></label>
+                <label>Background color <input id="keyColor" type="color" value="#ffffff"></label>
+              </div>
+              <div class="button-row">
+                <button id="adjustButton">Apply Brightness/Contrast</button>
+                <button id="pixelateButton">Pixelate</button>
+                <button id="removeBgButton">Remove Background</button>
+              </div>
+            </div>
+
+            <div class="tool-view" data-view="text">
+              <div class="form-grid">
+                <label>Caption <input id="captionText" type="text" value="PRIVATE EDIT"></label>
+                <label>Font size <input id="captionSize" type="number" min="8" max="200" value="54"></label>
+                <label>X <input id="captionX" type="number" min="0" value="40"></label>
+                <label>Y <input id="captionY" type="number" min="0" value="80"></label>
+                <label>Color <input id="captionColor" type="color" value="#fff4cf"></label>
+                <label>Outline <input id="captionOutline" type="color" value="#111111"></label>
+                <label>Start frame <input id="captionStart" type="number" min="0" value="0"></label>
+                <label>End frame <input id="captionEnd" type="number" min="0" value="0"></label>
+              </div>
+              <button id="captionButton">Apply Caption</button>
+              <hr>
+              <p class="tool-copy">Watermark/overlay applies one static image across the selected frame range.</p>
+              <div class="form-grid">
+                <label>Overlay image <input id="overlayInput" type="file" accept="image/*"></label>
+                <label>Scale % <input id="overlayScale" type="number" min="1" max="400" value="25"></label>
+                <label>X <input id="overlayX" type="number" min="0" value="24"></label>
+                <label>Y <input id="overlayY" type="number" min="0" value="24"></label>
+              </div>
+              <button id="overlayButton">Apply Overlay</button>
+            </div>
+
+            <div class="tool-view" data-view="frames">
+              <div class="form-grid">
+                <label>Sprite columns <input id="spriteColumns" type="number" min="1" value="5"></label>
+                <label>Tile width <input id="tileWidth" type="number" min="1" value="128"></label>
+                <label>Tile height <input id="tileHeight" type="number" min="1" value="128"></label>
+              </div>
+              <div class="button-row">
+                <button id="extractButton">Show Frames</button>
+                <button id="spriteButton">Generate Sprite PNG</button>
+                <button id="cutSpriteButton">Cut Current As Sprite</button>
+                <button id="exportPngButton">Export Current PNG</button>
+              </div>
+            </div>
+
+            <div class="tool-view" data-view="video">
+              <p class="tool-copy">Video sampling works with native browser APIs. Transcoding, GIF-to-video, and compression require `ffmpeg.wasm` wired through the adapter in `src/codecs.js`.</p>
+              <div class="form-grid">
+                <label>Start seconds <input id="videoStart" type="number" min="0" value="0"></label>
+                <label>Duration seconds <input id="videoDuration" type="number" min="1" max="30" value="4"></label>
+                <label>Output width <input id="videoWidth" type="number" min="64" value="480"></label>
+                <label>FPS <input id="videoToolFps" type="number" min="1" max="30" value="10"></label>
+              </div>
+              <button id="transcodeButton">Run ffmpeg.wasm Adapter</button>
+            </div>
+
+            <div class="tool-view" data-view="optimize">
+              <p class="tool-copy">PNG/JPEG/WebP browser exports are available through Canvas. GIF, AVIF, JXL, and advanced lossless optimization are exposed as optional WASM adapters.</p>
+              <div class="form-grid">
+                <label>JPEG/WebP quality <input id="qualityInput" type="range" min="0.1" max="1" step="0.05" value="0.82"></label>
+                <label>Format
+                  <select id="rasterFormat">
+                    <option value="image/png">PNG</option>
+                    <option value="image/jpeg">JPEG</option>
+                    <option value="image/webp">WebP</option>
+                  </select>
+                </label>
+              </div>
+              <button id="rasterExportButton">Export Optimized Still</button>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel frame-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Frames</p>
+              <h3 id="frameSummary">No frames</h3>
+            </div>
+            <button id="clearButton">Clear</button>
+          </div>
+          <div id="frameStrip" class="frame-strip"></div>
+        </section>
+
+        <section class="log" id="log" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,385 @@
+:root {
+  --ink: #1b1a17;
+  --muted: #6e695f;
+  --paper: #f6efe1;
+  --panel: rgba(255, 250, 240, 0.82);
+  --line: rgba(27, 26, 23, 0.16);
+  --ember: #e4572e;
+  --teal: #1d7874;
+  --gold: #f4b860;
+  --shadow: 0 28px 70px rgba(48, 36, 21, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(244, 184, 96, 0.45), transparent 28rem),
+    radial-gradient(circle at 88% 0%, rgba(29, 120, 116, 0.28), transparent 25rem),
+    linear-gradient(135deg, #f8f0df 0%, #efe0c4 52%, #ead4ad 100%);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  color: var(--ink);
+  background: #fffaf0;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(27, 26, 23, 0.12);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+button.primary,
+.tool-nav button.active {
+  color: #fffaf0;
+  background: var(--ink);
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 18rem minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  height: 100vh;
+  padding: 1.4rem;
+  border-right: 1px solid var(--line);
+  background: rgba(34, 31, 25, 0.92);
+  color: #fff7e8;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.brand-mark {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 35% 65% 50% 50%;
+  background: conic-gradient(from 130deg, var(--gold), var(--ember), var(--teal), var(--gold));
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.24);
+}
+
+.brand h1,
+.hero h2,
+.panel h3 {
+  margin: 0;
+  line-height: 1;
+}
+
+.brand h1 {
+  font-size: 1.35rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--muted);
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.sidebar .eyebrow,
+.sidebar p {
+  color: rgba(255, 247, 232, 0.68);
+}
+
+.tool-nav {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.tool-nav button {
+  width: 100%;
+  text-align: left;
+}
+
+.side-card {
+  margin-top: auto;
+  padding: 1rem;
+  border: 1px solid rgba(255, 247, 232, 0.2);
+  border-radius: 1.3rem;
+  background: rgba(255, 247, 232, 0.08);
+}
+
+.side-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.side-card p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.workspace {
+  display: grid;
+  gap: 1rem;
+  padding: 1.4rem;
+}
+
+.hero,
+.dropzone,
+.panel,
+.log {
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem;
+}
+
+.hero h2 {
+  max-width: 48rem;
+  font-size: clamp(1.7rem, 4vw, 4rem);
+}
+
+.status-pill {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  color: #fffaf0;
+  background: var(--teal);
+}
+
+.dropzone {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  outline: 2px dashed transparent;
+}
+
+.dropzone.dragging {
+  outline-color: var(--ember);
+}
+
+.dropzone input {
+  display: none;
+}
+
+.dropzone strong,
+.dropzone span {
+  display: block;
+}
+
+.dropzone span,
+.tool-copy,
+.log {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(22rem, 0.65fr);
+  gap: 1rem;
+}
+
+.panel {
+  padding: 1rem;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.preview-actions,
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#previewCanvas {
+  display: block;
+  width: 100%;
+  min-height: 20rem;
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(45deg, rgba(27, 26, 23, 0.08) 25%, transparent 25% 75%, rgba(27, 26, 23, 0.08) 75%),
+    linear-gradient(45deg, rgba(27, 26, 23, 0.08) 25%, transparent 25% 75%, rgba(27, 26, 23, 0.08) 75%);
+  background-position: 0 0, 12px 12px;
+  background-size: 24px 24px;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.tool-view {
+  display: none;
+}
+
+.tool-view.active {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-family: "Courier New", monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+input,
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  padding: 0.65rem 0.7rem;
+  color: var(--ink);
+  background: rgba(255, 250, 240, 0.82);
+}
+
+hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.frame-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: 0.75rem;
+  max-height: 20rem;
+  overflow: auto;
+}
+
+.frame-card {
+  position: relative;
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(255, 250, 240, 0.76);
+}
+
+.frame-card.active {
+  outline: 2px solid var(--ember);
+}
+
+.frame-card canvas {
+  width: 100%;
+  aspect-ratio: 1 / 0.7;
+  object-fit: contain;
+  border-radius: 0.7rem;
+  background: rgba(27, 26, 23, 0.07);
+}
+
+.frame-card span {
+  font-family: "Courier New", monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.frame-card .mini-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+.frame-card button {
+  padding: 0.45rem;
+  font-size: 0.8rem;
+}
+
+.log {
+  min-height: 3.2rem;
+  padding: 0.85rem 1rem;
+  font-family: "Courier New", monospace;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 980px) {
+  .shell,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .tool-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .workspace,
+  .sidebar {
+    padding: 0.75rem;
+  }
+
+  .hero,
+  .dropzone {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-grid,
+  .tool-nav {
+    grid-template-columns: 1fr;
+  }
+}
